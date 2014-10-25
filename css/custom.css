@@ -1,0 +1,46 @@
+h1.title {
+    font-size: 2.1em !important;
+    font-weight: bold;
+}
+
+#logo {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    height: 90px;
+    z-index: 30;
+    border: none !important;
+}
+
+.me {
+    margin: 0 !important;
+    text-align: center !important;
+}
+
+.me li {
+    list-style-type: none;
+    text-align: left;
+}
+
+.me li a {
+    margin-left: 15px;
+}
+
+img {
+    border: 5px solid #fff !important;
+}
+
+img.no-border,
+.no-border img {
+    border: 0 !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+.reveal pre code {
+    max-height: 490px;
+}
+
+.no-bullets li {
+    list-style-type: none;
+}
