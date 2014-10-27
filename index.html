@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="css/theme.css" id="theme">
 
         <!-- For syntax highlighting -->
-        <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+        <link rel="stylesheet" href="css/mono-blue.css">
 
         <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
 
@@ -38,11 +38,829 @@
                 <section>
                     <section data-markdown>
                         <script type="text/template">
-                            ## Title
+                            ## Introduction to REST
+                        </script>
+                    </section>
+
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### **RE**presentational **S**tate **T**ransfer
+
+                            REST is the underlying architectural principle of the web.
+
+                            It is formalized as a set of **constraints**,
+                            described in<br>**Roy Fielding**'s dissertation.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### **R**ichardson **M**aturity **M**odel
+
+                            ![](images/rmm.png)
+
+                            <p>
+                                <small>
+                                    [http://martinfowler.com/articles/richardsonMaturityModel.html](http://martinfowler.com/articles/richardsonMaturityModel.html)
+                                </small>
+                            </p>
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Level 0 - The Swamp of POX
+
+                            * HTTP as a tunneling mechanism
+                            * RPC style system (SOAP, XML-RPC)
+
+                            <br>
+                            ![](images/rmm0.png)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Level 1 - Resources
+
+                            * Individual resources (**URI**s)
+                            * Notion of object identity
+
+                            <br>
+                            ![](images/rmm1.png)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Level 2 - HTTP Verbs
+
+                            * **Client** uses specific HTTP **verbs**
+                            * **Server** uses HTTP **status codes**
+
+                            <br>
+                            ![](images/rmm2.png)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### HTTP Verbs
+
+                            <p /><center>
+
+                            | Method   | Safe? | Idempotent? |
+                            |:--------:|:-----:|:-----------:|
+                            | `GET`    |  yes  |    yes      |
+                            | `HEAD`   |  yes  |    yes      |
+                            | `POST`   |  no   |    no       |
+                            | `PUT`    |  no   |    yes      |
+                            | `DELETE` |  no   |    yes (*)  |
+                            | ...      |  no   |    no       |
+
+                            </center>
+
+                            **Safe**: means cacheable.
+
+                            **Idempotent**: result independent<br>on the number of executions.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### HTTP Status Codes
+
+                            <p /><center>
+
+                            | Code range | Description   | Example                   |
+                            |:----------:|:-------------:|:-------------------------:|
+                            | 1xx        |  Information  | `100` - Continue          |
+                            | 2xx        |  Successful   | `201` - Created           |
+                            | 3xx        |  Redirection  | `301` - Moved Permanently |
+                            | 4xx        |  Client Error | `404` - Not Found         |
+                            | 5xx        |  Server Error | `501` - Not Implemented   |
+
+                            </center>
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Level 3 - Hypermedia Controls
+
+                            * Service discovery via link relations
+                            * Hypermedia formats (ATOM, HAL, JSON-LD, etc.)
+
+                            <br>
+                            ![](images/rmm3.png)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Level 3
+
+                            ### =
+
+                            ### Content Type Negotiation
+
+                            ### +
+
+                            ### HATEOAS
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Content Type Negotiation
+
+                            Content Type Negotiation is the principle of **finding appropriate response
+                            formats** based on client requirements.
+
+                            <br>
+
+                            * **No standardized algorithm available**
+                            * Apache [mod_negotiation](http://httpd.apache.org/docs/2.4/content-negotiation.html) algorithm is documented though
+                            * Also covers encoding (`Accept-Encoding`) and language (`Accept-Language`) negotiation
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Example
+
+                            ```http
+                            Accept: application/json, application/xml;q=0.9, text/html;q=0.8,
+                                    text/*;q=0.7, */*;q=0.5
+                            ```
+
+                            <br /><center>
+
+                            | Priority |        Description                  |
+                            | -------- |-------------------------------------|
+                            | `q=1.0`  | `application/json`                  |
+                            | `q=0.9`  | `application/xml`                   |
+                            | `q=0.8`  | `text/html`                         |
+                            | `q=0.7`  | `text/*` (ie. any text)             |
+                            | `q=0.5`  | `*/*` (ie. any media type)          |
+
+                            </center>
+                        </script>
+                    </section>
+                   <section data-markdown>
+                        <script type="text/template">
+                            ### HATEOAS
+
+                            **H**ypermedia **A**s **T**he **E**ngine **O**f
+                            **A**pplication **S**tate.
+
+                            It means that hypermedia should be used to find your
+                            <br>way through the API.  It is all about **state
+                            transitions**.
+
+                            Your application is just a big **state machine**.
+
+                            ```
+                            <?xml version="1.0" encoding="UTF-8"?>
+                            <collection page="1" limit="10" pages="1">
+                                <user id="123"></user>
+                                <user id="456"></user>
+
+                                <link rel="self" href="/api/users?page=1&amp;limit=10" />
+                                <link rel="first" href="/api/users?page=1&amp;limit=10" />
+                                <link rel="last" href="/api/users?page=1&amp;limit=10" />
+                            </collection>
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### So much for the REST theory ...
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Let's Meet the PHP World!
                         </script>
                     </section>
                 </section>
-            </section>
+
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            In order to comply with RMM Level 1,<br>I want to turn business objects/data to **resources**.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## JMS Serializer
+
+                            <br>
+                            <i class="fa fa-github"></i> [schmittjoh/serializer](https://github.com/schmittjoh/serializer)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### In A Nutshell
+
+                            * Enables (de)**serialization of object graphs**
+                            * Implements visitor pattern to enable flexibility
+                            * Fully leverage native JSON and XML
+                            * Custom **exclusion strategies** to determine what to serialize
+                            * Quite easy to extend
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Usage
+
+                                use JMS\SerializerBundle\Annotation as Serializer;
+
+                                /** @Serializer\XmlRoot("response") */
+                                class MyResponse
+                                {
+                                    /** * @Serializer\XmlList(inline=true, entry="article") */
+                                    protected $articles;
+
+                                    /** * @Serializer\XmlAttribute() */
+                                    protected $page;
+
+                                    public function __construct(Collection $articles, $page)
+                                    {
+                                        $this->articles = $articles;
+                                        $this->page     = $page;
+                                    }
+                                }
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### JSON
+
+                                {
+                                    "articles": [
+                                        "bim",
+                                        "bam",
+                                        "bingo"
+                                    ],
+                                    "page": "2"
+                                }
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### XML
+
+                                <response page="2">
+                                    <article>bim</article>
+                                    <article>bam</article>
+                                    <article>bingo</article>
+                                </response>
+                        </script>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <p>In order to comply with RMM Level 2,<br>I want to use proper <strong>HTTP verbs</strong> and <strong>status codes</strong>.</p>
+                    </section>
+                    <section>
+                        <p>But I need to understand what the client wants and says.</p>
+                        <p class="fragment">And I also need to rely on a serializer.</p>
+                        <p class="fragment">And I will have to deal with filters, versioning, etc.</p>
+                        <p class="fragment"><br><strong>I need a framework!</strong></p>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## FOSRestBundle (+ Symfony)
+
+                            <br>
+                            <i class="fa fa-github"></i> [FriendsOfSymfony/FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### In A Nutshell
+
+                            * **Toolbox of services** and listeners to build RESTful APIs
+                            * Generate HTML, XML, and JSON from a single action
+                            * Automatic generation of routes from actions
+                            * GET parameter parsing and validation
+                            * Integration with Symfony serializer and JMS Serializer
+                            * Accept header negotiation (thx to the [Negotiation](https://github.com/willdurand/Negotiation) lib)
+                            * Request body decoding
+                            * API versioning
+
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Usage
+
+                            ```
+                            class RestController
+                            {
+                                /**
+                                 * route name: liip_hello_rest_get_articles
+                                 * pattern: /liip/hello/rest/articles.{_format}
+                                 * http method requirement: GET
+                                 *
+                                 * @View()
+                                 * @QueryParam(name="page", requirements="\d+", default="1")
+                                 */
+                                public function getArticlesAction($page)
+                                {
+                                    //$page = $request->query->get('page');
+                                    //$page = preg_match('\d+', $page) ? $page : 1;
+                                    $articles = [ 'bim', 'bam', 'bingo' ];
+
+                                    return new \Acme\MyBundle\MyResponse($articles, $page);
+                                }
+                            }
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### HTML
+
+                                <html>
+                                    <body>
+                                        <div>
+                                            <div>bim</div>
+                                            <div>bam</div>
+                                            <div>bingo</div>
+                                        </div>
+                                        <div>page: 2</div>
+                                    </body>
+                                </html>
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Content Type Negotiation
+
+                                fos_rest:
+                                    format_listener:
+                                        rules:
+                                            -
+                                                path: ^/
+                                                priorities: [ html, json, xml ]
+                                                fallback_format: ~
+                                                prefer_extension: true
+
+                            <p />
+
+                                Accept: application/json, application/xml;q=0.9, text/html;q=0.8,
+                                        text/*;q=0.7, */*;q=0.5
+
+                            <i class="fa fa-github"></i> [willdurand/Negotiation](https://github.com/willdurand/Negotiation)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## Version Listener
+
+                            ```
+                            fos_rest:
+                                view:
+                                    mime_types:
+                                        json:
+                                            - 'application/json'
+                                            - 'application/json;version=1.0'
+                                            - 'application/json;version=1.1'
+                                format_listener:
+                                    media_type:
+                                        version_regex: '/(v|version)=(?P<version>[0-9\.]+)/'
+                            ```
+
+                            ```
+                            Accept: application/json;version=1.1
+                            ```
+
+                            ```
+                            class User
+                            {
+                                /** @Until("1.0") */
+                                private $name;
+
+                                /** @Since("1.1") */
+                                private $lastname;
+                            }
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Message Decoding
+
+                            * Decode request body from XML, JSON, etc. into the `request`
+                            * Integration with converters to turn parameters to objects
+                            * GET parameter validation and normalization
+
+                            ```
+                            POST /users HTTP/1.1
+                            Accept: application/json,*/*;q=0.8
+                            Content-Type: application/json
+
+                            {"name":"Don Johnson"}
+                            ```
+
+                            ```
+                            public functon postAction(Request $request)
+                            {
+                                $name = $request->request->get('name');
+                            }
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Allowed Methods Listener
+
+                            * Examines all available routes to determine what HTTP methods are available for the request URI
+                            * Automatically sets an according `Allow` header in the response
+
+                            <br>
+
+                                fos_rest:
+                                  allowed_methods_listener: true
+
+                            ```
+                            HTTP/1.1 200 OK
+                            Allow: GET, POST
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### MIME Type Listener
+
+                            * Register MIME types that Symfony2's Request class does not support by default
+
+                            <br>
+
+                                fos_rest:
+                                  view:
+                                    mime_types:
+                                      json: ['application/json', 'application/vnd.example-com.foo+json']
+                                      rss: 'application/rss+xml'
+                                      jpg: 'image/jpeg'
+                                      png: 'image/png'
+                                  jsonp_handler: ~
+
+                            <br>
+                            <i class="fa fa-info-circle"></i> JSONP callback validation thanks to the
+                            <br>[willdurand/JsonpCallbackValidator](https://github.com/willdurand/JsonpCallbackValidator) library
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Error/Exception Handling
+
+                            * Return correct HTTP status code
+                            * Determine for which exception to expose the exception message
+                            * Automatically extract errors from a `Form` instance
+
+                            <br>
+
+                                fos_rest:
+                                  exception:
+                                    codes:
+                                      'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
+                                      'Doctrine\ORM\OptimisticLockException': HTTP_CONFLICT
+                                    messages:
+                                      'Symfony\Component\Routing\Exception\ResourceNotFoundException': true
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## Want A Smarter Mapping?
+                            <br>
+                            <i class="fa fa-github"></i> [TheBigBrainsCompany/rest-util](https://github.com/TheBigBrainsCompany/rest-util)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Usage
+
+                            ```
+                            $invalidArgumentExceptionMapping = new ExceptionMapping(array(
+                                'exceptionClassName'   => '\InvalidArgumentException',
+                                'factory'              => 'default',
+                                'httpStatusCode'       => 400,
+                                'errorCode'            => 400101,
+                                'errorMessage'         => null,
+                                'errorExtendedMessage' => 'Extended message',
+                                'errorMoreInfoUrl'     => 'http://api.my.tld/doc/error/400101',
+                            ));
+
+                            $exceptionMap = new ExceptionMap();
+                            $exceptionMap->add($invalidArgumentExceptionMapping);
+
+                            $errorResolver = new ErrorResolver($exceptionMap);
+
+                            $error = $errorResolver->resolve(
+                                new \InvalidArgumentException('This is an invalid argument exception.')
+                            );
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Symfony Bundle Configuration
+
+                            ```
+                            tbbc_rest_util:
+                                error:
+                                    exception_mapping:
+                                        InvalidArgumentException:
+                                            class: "InvalidArgumentException"
+                                            factory: default
+                                            http_status_code: 400
+                                            error_code: 400101
+                                            error_message: ~
+                                            extended_message: "Extended message"
+                                            more_info_url: "http://api.my.tld/doc/error/400101"
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Example
+
+                            ```
+                            print_r($error->toArray());
+                            ```
+
+                            ```
+                            Array
+                            (
+                                [http_status_code] => 400
+                                [code]             => 400101
+                                [message]          => This is an invalid argument exception.
+                                [extended_message] => Extended message
+                                [more_info_url]    => http://api.my.tld/doc/error/400101
+                            )
+                            ```
+
+                            ```
+                            echo json_encode($error->toArray());
+                            ```
+
+                            ```
+                            {
+                                "http_status_code": 400,
+                                "code":             400101,
+                                "message":          "This is an invalid argument exception.",
+                                "extended_message": "Extended message",
+                                "more_info_url":    "http:\/\/api.my.tld\/doc\/error\/400101"
+                            }
+                            ```
+                        </script>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            In order to comply with RMM Level 3,<br>I want to **HATEOAS** ALL THE THINGS!
+                        </script>
+                    </section>
+
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## Hateoas
+
+                            <br>
+                            <i class="fa fa-github"></i> [willdurand/Hateoas](https://github.com/willdurand/Hateoas)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### In A Nutshell
+
+                            * Leverages the JMS Serializer library
+                            * Relies on the Symfony2 **ExpressionLanguage** component
+                            * Supports JSON and XML
+                            * Allows to configure **links** and **embedded resources** in<br>XML, YAML, PHP, or Annotations
+                            * Dynamic relations (relation providers)
+                            * Exclusion strategies
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Usage
+
+                                use JMS\Serializer\Annotation as Serializer;
+                                use Hateoas\Configuration\Annotation as Hateoas;
+
+                                /**
+                                 * @Serializer\XmlRoot("user")
+                                 *
+                                 * @Hateoas\Relation("self", href = "expr('/api/users/' ~ object.getId())")
+                                 */
+                                class User
+                                {
+                                    /** @Serializer\XmlAttribute */
+                                    private $id;
+                                    private $firstName;
+                                    private $lastName;
+
+                                    public function getId() {}
+                                }
+                            </script>
+                        </section>
+                        <section data-markdown>
+                            <script type="text/template">
+                                ### JSON
+
+                                    $hateoas = HateoasBuilder::create()->build();
+                                    $json    = $hateoas->serialize(new User(123, 'John', 'Doe'), 'json');
+
+                                <br>
+
+                                    {
+                                        "id": 123,
+                                        "first_name": "John",
+                                        "last_name": "Doe",
+                                        "_links": {
+                                            "self": {
+                                                "href": "/api/users/123"
+                                            }
+                                        }
+                                    }
+                            </script>
+                        </section>
+                        <section data-markdown>
+                            <script type="text/template">
+                                ### XML
+
+                                    $hateoas = HateoasBuilder::create()->build();
+                                    $xml     = $hateoas->serialize(new User(123, 'John', 'Doe'), 'xml');
+
+                                <br>
+
+                                    <user id="123">
+                                        <first_name><![CDATA[John]]></first_name>
+                                        <last_name><![CDATA[Doe]]></last_name>
+
+                                        <link rel="self" href="/api/users/123"/>
+                                    </user>
+                            </script>
+                        </section>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            In order to make my API more <strike>fancy</strike> self-documenting,<br>I want to use **URI Templates**.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### RFC 6570: URI Template
+
+                            A compact sequence of characters for describing<br>a range of URIs through variable expansion.
+
+                            <br>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>URIs</th>
+                                        <th>URI Template</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="http://example.com/~fred/">http://example.com/~fred/</a></td>
+                                        <td rowspan="2"><a href="http://example.com/~{username}/">http://example.com/~{username}/</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="http://example.com/~mark/">http://example.com/~mark/</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## TemplatedUriRouter
+
+                            <br>
+                            <i class="fa fa-github"></i> [hautelook/TemplatedUriRouter](https://github.com/hautelook/TemplatedUriRouter)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Usage
+
+                                demo_route:
+                                    pattern: /demo/{page}
+
+                            <p />
+
+                                $templateLink = (new Rfc6570Generator($routes))
+                                    ->generate('demo_route', array(
+                                        'page'   => '{page}',
+                                        'sort'   => '{sort}',
+                                        'filter' => array('{filter}'),
+                                    ));
+
+                            <br>
+
+                                /demo/{page}?{&sort}{&filter%5B%5D*}
+
+                            <br>
+                            <i class="fa fa-info-circle"></i> Leverages the [Symfony Routing component](http://symfony.com/doc/current/components/routing/introduction.html).
+                        </script>
+                    </section>
+                </section>
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            In order to [make humans happy|dominate the world|whatever],
+                            <br>I want to create **documentation** for my API.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## Swagger UI
+
+                            <br>
+                            <i class="fa fa-github"></i> [wordnik/swagger-ui](https://github.com/wordnik/swagger-ui)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## NelmioApiDocBundle
+
+                            <br>
+                            <i class="fa fa-github"></i> [nelmio/NelmioApiDocBundle](https://github.com/nelmio/NelmioApiDocBundle)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### In A Nutshell
+
+                            * Designed for Symfony
+                            * Generates documentation for your REST APIs
+                            * Gathers information from PHPDoc
+                            * Supports FOSRestBundle, SensioFrameworkExtraBundle, JMSSerializerBundle
+                              and JMSSecurityExtraBundle
+                            * Supports **your own annotations** and **you own parsers**
+                            * Sandbox (**Killer Feature &hearts;**)
+                            * Swagger compliant
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Usage
+
+                                /**
+                                 * List all notes.
+                                 *
+                                 * @ApiDoc(
+                                 *   resource = true,
+                                 *   statusCodes = { 200 = "Returned when successful" }
+                                 * )
+                                 * @QueryParam(
+                                 *   name="offset", requirements="\d+", nullable=true,
+                                 *   description="Offset from which to start listing notes."
+                                 * )
+                                 * @QueryParam(
+                                 *   name="limit", requirements="\d+", default="5",
+                                 *   description="How many notes to return."
+                                 * )
+                                 */
+                                public function getNotesAction() {}
+                        </script>
+                    </section>
+                    <section>
+                        <img src="images/apidocbundle.png" class="no-border" />
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## ng-admin
+
+                            <br>
+                            <i class="fa fa-github"></i> [marmelab/ng-admin](https://github.com/marmelab/ng-admin)
+                        </script>
+                    </section>
+                    <section>
+                        <img src="images/ng-admin.png" class="no-border" />
+                    </section>
+                </section>
+
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## Demo?
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### <i class="fa fa-github"></i> [willdurand/Propilex](https://github.com/willdurand/Propilex)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### <i class="fa fa-github"></i> [gimler/symfony-rest-edition](https://github.com/gimler/symfony-rest-edition)
+                        </script>
+                    </section>
+                </section>
 
                 <section data-markdown>
                     <script type="text/template">
@@ -56,7 +874,7 @@
                         <ul class="me">
                             <!--
                             <li>
-                                <p><i class="fa fa-comments-o"></i><a href="https://joind.in/XXX" title="joindin">joind.in/XXX</a></p>
+                                <p><i class="fa fa-comments-o"></i><a href="https://joind.in/11215" title="joindin">joind.in/11215</a></p>
                             </li>
                             -->
                             <li>
@@ -72,6 +890,130 @@
                     </script>
                 </section>
 
+                <section data-markdown>
+                    <script type="text/template">
+                        ![](images/knpuniversity.png)
+
+                        <p>
+                            <small>
+                                [https://knpuniversity.com/screencast/rest](https://knpuniversity.com/screencast/rest)
+                            </small>
+                        </p>
+                    </script>
+                </section>
+
+                <section data-markdown>
+                    <script type="text/templte">
+                        ## Further Reading
+
+                        <small>
+
+                        * http://www.ietf.org/rfc/rfc2616.txt
+                        * http://martinfowler.com/articles/richardsonMaturityModel.html
+                        * http://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven
+                        * http://www.slideshare.net/Wombert/designing-http-interfaces-and-restful-web-services-dpc2012-20120608
+                        * http://williamdurand.fr/2012/08/02/rest-apis-with-symfony2-the-right-way/
+                        * http://www.mnot.net/blog/2012/12/04/api-evolution
+                        * http://knpuniversity.com/blog/what-the-rest
+                        * http://knpuniversity.com/blog/rest-revisited
+                        * http://timelessrepo.com/haters-gonna-hateoas
+                        * http://blog.liip.ch/archive/2013/10/28/resting-with-symfony2.html
+                        * http://williamdurand.fr/2014/02/14/please-do-not-patch-like-an-idiot/
+
+                        </small>
+                    </script>
+                </section>
+
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            In order to not burn too many servers,<br>I want to add and manage a **caching layer**.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## FOSHttpCache
+
+                            <br>
+                            <i class="fa fa-github"></i> [FriendsOfSymfony/FOSHttpCache](https://github.com/FriendsOfSymfony/FOSHttpCache)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### In A Nutshell
+
+                            * Set path-based cache expiration headers via app config
+                            * Set up an invalidation scheme without writing PHP code
+                            * Tag your responses and invalidate cache based on tags
+                            * Send invalidation requests with minimal performance impact
+                              (**Varnish** and **Nginx** supported out of the box)
+                            * Differentiate caches based on user type (e.g. roles)
+                            * Easily implement HTTP cache client
+                        </script>
+                    </section>
+                </section>
+
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            In order to provides client applications a **secure
+                            delegated access** to my API on behalf of my users,
+                            I want to use **OAuth**.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### What Is OAuth?
+
+                            OAuth is an **open protocol** to allow **secure
+                            <br>authorization** in a simple and **standard method**
+                            <br>from web, mobile, and desktop applications.
+
+                            <br>
+                            It is an **authorization framework** that enables a
+                            third-party application to **obtain limited access
+                            to an HTTP service**.
+
+                            <p>
+                                <br>
+                                <br>
+                                <small>
+                                    [http://edu.williamdurand.fr/security-slides/#slide85](http://edu.williamdurand.fr/security-slides/#slide85)
+                                </small>
+                            </p>
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### HWIOAuthBundle
+
+                            * Client-side implementation
+                            * Support 20+ different providers
+                            * Supports both OAuth1.0a and OAuth2
+
+                            <br>
+                            <i class="fa fa-github"></i> [hwi/HWIOAuthBundle](https://github.com/hwi/HWIOAuthBundle)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### FOSOAuthServerBundle
+
+                            * Server-side implementation of OAuth2
+                            * Supports Doctrine ORM|ODM, Propel
+                            * Highly configurable
+
+                            <br>
+
+                            Thank you [Alan Gabriel Bem](https://github.com/alanbem) for helping us!
+
+                            <br>
+                            <i class="fa fa-github"></i> [FriendsOfSymfony/FOSOAuthServerBundle](https://github.com/FriendsOfSymfony/FOSOAuthServerBundle)
+                            <br>
+                            <i class="fa fa-github"></i> [willdurand/BazingaOAuthServerBundle](https://github.com/willdurand/BazingaOAuthServerBundle) (OAuth1.0a)
+                        </script>
+                    </section>
+                </section>
             </div>
         </div>
         <script type="text/javascript" src="reveal.js/lib/js/head.min.js"></script>

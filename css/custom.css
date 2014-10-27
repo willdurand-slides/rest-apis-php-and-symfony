@@ -44,3 +44,16 @@ img.no-border,
 .no-bullets li {
     list-style-type: none;
 }
+
+.reveal table {
+    border-collapse: collapse;
+}
+.reveal table th {
+    border: 2px solid black;
+    padding: 5px 10px 5px 10px;
+    font-weight: bold;
+}
+.reveal table td {
+    border: 2px solid black;
+    padding: 5px 10px 5px 10px;
+}
