@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
 
-        <title>William Durand @ Blend Web Mix 2014</title>
+        <title>Architecture REST : On ne va pas se mentir. | William Durand @ Blend Web Mix 2014</title>
 
         <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
         <link rel="stylesheet" href="css/theme.css" id="theme">
@@ -41,7 +41,16 @@
                             ## Introduction to REST
                         </script>
                     </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            **Everyone** who has ever talked about REST, at
+                            <br>some point, **has said something idiotic about
+                            REST**.
 
+                            <br>
+                            <small>(Except for maybe Roy Fielding)<small>
+                        </script>
+                    </section>
                     <section data-markdown>
                         <script type="text/template">
                             ### **RE**presentational **S**tate **T**ransfer
@@ -118,6 +127,15 @@
                             **Safe**: means cacheable.
 
                             **Idempotent**: result independent<br>on the number of executions.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### (*)
+
+                            <br>
+                            What should be the status code for a `DELETE`
+                            request<br>performed on a non existent resource?
                         </script>
                     </section>
                     <section data-markdown>
