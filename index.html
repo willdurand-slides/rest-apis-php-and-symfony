@@ -55,6 +55,7 @@
                         <script type="text/template">
                             ### **RE**presentational **S**tate **T**ransfer
 
+                            <br>
                             REST is the underlying architectural principle of the web.
 
                             It is formalized as a set of **constraints**,
@@ -157,6 +158,11 @@
                     </section>
                     <section data-markdown>
                         <script type="text/template">
+                            ### [http://httpstatus.es/](http://httpstatus.es/)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
                             ### Level 3 - Hypermedia Controls
 
                             * Service discovery via link relations
@@ -241,16 +247,49 @@
                             ```
                         </script>
                     </section>
+                </section>
+
+                <section>
                     <section data-markdown>
                         <script type="text/template">
-                            ### So much for the REST theory ...
+                            ## Quick Recap'
                         </script>
                     </section>
                     <section data-markdown>
                         <script type="text/template">
-                            ### Let's Meet the PHP World!
+                            # 1
+                            ### Identify the "things" you want to expose with your API.
                         </script>
                     </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            # 2
+                            ### Provide a well-know way of manipulating these "things".
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            # 3
+                            ### Link these "things" together so you can navigate from one to another.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            # 4
+                            ### STATELESS!!!
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### REST is the web!
+                        </script>
+                    </section>
+                </section>
+
+                <section data-markdown>
+                    <script type="text/template">
+                        ## How to build REST APIs with PHP/Symfony?
+                    </script>
                 </section>
 
                 <section>
@@ -340,7 +379,7 @@
                     </section>
                     <section data-markdown>
                         <script type="text/template">
-                            ## FOSRestBundle (+ Symfony)
+                            ## FOSRestBundle<br>(+ Symfony)
 
                             <br>
                             <i class="fa fa-github"></i> [FriendsOfSymfony/FOSRestBundle](https://github.com/FriendsOfSymfony/FOSRestBundle)
@@ -404,6 +443,7 @@
                                 </html>
                         </script>
                     </section>
+                    <!--
                     <section data-markdown>
                         <script type="text/template">
                             ### Content Type Negotiation
@@ -458,6 +498,7 @@
                             ```
                         </script>
                     </section>
+                    -->
                     <section data-markdown>
                         <script type="text/template">
                             ### Message Decoding
@@ -482,6 +523,7 @@
                             ```
                         </script>
                     </section>
+                    <!--
                     <section data-markdown>
                         <script type="text/template">
                             ### Allowed Methods Listener
@@ -522,6 +564,7 @@
                             <br>[willdurand/JsonpCallbackValidator](https://github.com/willdurand/JsonpCallbackValidator) library
                         </script>
                     </section>
+                    -->
                     <section data-markdown>
                         <script type="text/template">
                             ### Error/Exception Handling
@@ -723,72 +766,6 @@
                 <section>
                     <section data-markdown>
                         <script type="text/template">
-                            In order to make my API more <strike>fancy</strike> self-documenting,<br>I want to use **URI Templates**.
-                        </script>
-                    </section>
-                    <section data-markdown>
-                        <script type="text/template">
-                            ### RFC 6570: URI Template
-
-                            A compact sequence of characters for describing<br>a range of URIs through variable expansion.
-
-                            <br>
-
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>URIs</th>
-                                        <th>URI Template</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><a href="http://example.com/~fred/">http://example.com/~fred/</a></td>
-                                        <td rowspan="2"><a href="http://example.com/~{username}/">http://example.com/~{username}/</a></td>
-                                    </tr>
-                                    <tr>
-                                        <td><a href="http://example.com/~mark/">http://example.com/~mark/</a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </script>
-                    </section>
-                    <section data-markdown>
-                        <script type="text/template">
-                            ## TemplatedUriRouter
-
-                            <br>
-                            <i class="fa fa-github"></i> [hautelook/TemplatedUriRouter](https://github.com/hautelook/TemplatedUriRouter)
-                        </script>
-                    </section>
-                    <section data-markdown>
-                        <script type="text/template">
-                            ### Usage
-
-                                demo_route:
-                                    pattern: /demo/{page}
-
-                            <p />
-
-                                $templateLink = (new Rfc6570Generator($routes))
-                                    ->generate('demo_route', array(
-                                        'page'   => '{page}',
-                                        'sort'   => '{sort}',
-                                        'filter' => array('{filter}'),
-                                    ));
-
-                            <br>
-
-                                /demo/{page}?{&sort}{&filter%5B%5D*}
-
-                            <br>
-                            <i class="fa fa-info-circle"></i> Leverages the [Symfony Routing component](http://symfony.com/doc/current/components/routing/introduction.html).
-                        </script>
-                    </section>
-                </section>
-                <section>
-                    <section data-markdown>
-                        <script type="text/template">
                             In order to [make humans happy|dominate the world|whatever],
                             <br>I want to create **documentation** for my API.
                         </script>
@@ -940,6 +917,73 @@
 
                         </small>
                     </script>
+                </section>
+
+                <section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            In order to make my API more <strike>fancy</strike> self-documenting,<br>I want to use **URI Templates**.
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### RFC 6570: URI Template
+
+                            A compact sequence of characters for describing<br>a range of URIs through variable expansion.
+
+                            <br>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>URIs</th>
+                                        <th>URI Template</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="http://example.com/~fred/">http://example.com/~fred/</a></td>
+                                        <td rowspan="2"><a href="http://example.com/~{username}/">http://example.com/~{username}/</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="http://example.com/~mark/">http://example.com/~mark/</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ## TemplatedUriRouter
+
+                            <br>
+                            <i class="fa fa-github"></i> [hautelook/TemplatedUriRouter](https://github.com/hautelook/TemplatedUriRouter)
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Usage
+
+                                demo_route:
+                                    pattern: /demo/{page}
+
+                            <p />
+
+                                $templateLink = (new Rfc6570Generator($routes))
+                                    ->generate('demo_route', array(
+                                        'page'   => '{page}',
+                                        'sort'   => '{sort}',
+                                        'filter' => array('{filter}'),
+                                    ));
+
+                            <br>
+
+                                /demo/{page}?{&sort}{&filter%5B%5D*}
+
+                            <br>
+                            <i class="fa fa-info-circle"></i> Leverages the [Symfony Routing component](http://symfony.com/doc/current/components/routing/introduction.html).
+                        </script>
+                    </section>
                 </section>
 
                 <section>
