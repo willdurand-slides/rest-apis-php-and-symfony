@@ -259,7 +259,7 @@
                 <section>
                     <section data-markdown>
                         <script type="text/template">
-                            ## Quick Recap'
+                            ## Let's Summarize
                         </script>
                     </section>
                     <section data-markdown>
@@ -285,8 +285,6 @@
                             }
                             ```
 
-                            <br>
-
                             ```
                             GET /programmers/willdurand
 
@@ -301,6 +299,76 @@
                         <script type="text/template">
                             # 2
                             ### Provide a well-know way of manipulating these "things".
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Creating Resources
+
+                            ```
+                            POST /programmers HTTP/1.1
+                            Content-Type: application/x-www-form-urlencoded
+
+                            nickname=ubermuda
+                            ```
+
+                            ```
+                            HTTP/1.1 201 Created
+                            Location: /programmers/ubermuda
+                            Content-Type: application/json
+
+                            {
+                                "nickname": "ubermuda",
+                                "powerLevel": 0
+                            }
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Updating Resources
+
+                            ```
+                            PUT /programmers/ubermuda HTTP/1.1
+                            Content-Type: application/json
+
+                            {
+                                "nickname": "ubermuda",
+                                "powerLevel": 1
+                            }
+                            ```
+
+                            ```
+                            HTTP/1.1 200 OK
+                            Content-Type: application/json
+
+                            {
+                                "nickname": "ubermuda",
+                                "powerLevel": 1
+                            }
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### Deleting Resources
+
+                            ```
+                            DELETE /programmers/ubermuda HTTP/1.1
+                            ```
+
+                            <br>
+                            Idempotent
+
+                            ```
+                            HTTP/1.1 204 No Content
+                            ```
+
+                            Not idempotent
+
+                            ```
+                            HTTP/1.1 404 Not Found
+                            ```
                         </script>
                     </section>
                     <section data-markdown>
