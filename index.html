@@ -270,6 +270,35 @@
                     </section>
                     <section data-markdown>
                         <script type="text/template">
+                            ### Collections & Resources
+
+                            ```
+                            GET /programmers
+
+                            {
+                                "programmers": [
+                                    {
+                                        "nickname": "willdurand",
+                                        "powerLevel": 5
+                                    }
+                                ]
+                            }
+                            ```
+
+                            <br>
+
+                            ```
+                            GET /programmers/willdurand
+
+                            {
+                                "nickname": "willdurand",
+                                "powerLevel": 5
+                            }
+                            ```
+                        </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
                             # 2
                             ### Provide a well-know way of manipulating these "things".
                         </script>
@@ -279,6 +308,37 @@
                             # 3
                             ### Link these "things" together so you can navigate from one to another.
                         </script>
+                    </section>
+                    <section data-markdown>
+                        <script type="text/template">
+                            ### HAL+JSON
+
+                            ```
+                            GET /programmers
+
+                            {
+                                "programmers": [
+                                    {
+                                        "nickname": "willdurand",
+                                        "powerLevel": 5,
+                                        "_links": {
+                                            "self": { "href": "/programmers/willdurand" },
+                                        }
+                                    }
+                                ],
+                                "_links": {
+                                    "self":  { "href": "/programmers?page=2&limit=1" },
+                                    "first": { "href": "/programmers?page=1&limit=1" },
+                                    "last":  { "href": "/programmers?page=5&limit=1" },
+                                    "next":  { "href": "/programmers?page=3&limit=1" }
+                                }
+                            }
+                            ```
+                        </script>
+                    </section>
+                    <section>
+                        <h3>State Machine</h3>
+                        <p><img src="images/graph.png" /></p>
                     </section>
                     <section data-markdown>
                         <script type="text/template">

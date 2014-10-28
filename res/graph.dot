@@ -1,0 +1,25 @@
+digraph {
+    "/programmers?page=2" -> "/programmers?page=2" [ label = "self" ]
+    "/programmers?page=2" -> "/programmers?page=3" [ label = "next" ]
+    "/programmers?page=2" -> "/programmers?page=1" [ label = "first" ]
+    "/programmers?page=2" -> "/programmers?page=5" [ label = "last" ]
+
+    "/programmers?page=3" -> "/programmers?page=1" [ label = "first" ]
+    "/programmers?page=3" -> "/programmers?page=2" [ label = "previous" ]
+    "/programmers?page=3" -> "/programmers?page=3" [ label = "self" ]
+    "/programmers?page=3" -> "/programmers?page=4" [ label = "next" ]
+    "/programmers?page=3" -> "/programmers?page=5" [ label = "last" ]
+
+    "/programmers?page=1" -> "/programmers?page=1" [ label = "self" ]
+    "/programmers?page=1" -> "/programmers?page=2" [ label = "next" ]
+    "/programmers?page=1" -> "/programmers?page=5" [ label = "last" ]
+
+    "/programmers?page=4" -> "/programmers?page=4" [ label = "self" ]
+    "/programmers?page=4" -> "/programmers?page=3" [ label = "previous" ]
+    "/programmers?page=4" -> "/programmers?page=5" [ label = "last" ]
+    "/programmers?page=4" -> "/programmers?page=1" [ label = "first" ]
+
+    "/programmers?page=5" -> "/programmers?page=5" [ label = "self" ]
+    "/programmers?page=5" -> "/programmers?page=4" [ label = "previous" ]
+    "/programmers?page=5" -> "/programmers?page=1" [ label = "first" ]
+}
